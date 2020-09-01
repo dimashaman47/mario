@@ -12,8 +12,8 @@ export default class SpriteSheet {
         buffer.height = this.height;
         buffer.getContext('2d')
             .drawImage(this.image,
-                x * this.width,
-                y * this.height,
+                x,
+                y,
                 this.width,
                 this.height,
                 0,
@@ -21,6 +21,10 @@ export default class SpriteSheet {
                 this.width,
                 this.height)
         this.tiles.set(name, buffer)
+    }
+
+    defineTile(name, x, y) { 
+        this.define(name, x * this.width, y * this.height)
     }
 
     draw(name, context, x, y) {
