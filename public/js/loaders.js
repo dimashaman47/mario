@@ -1,3 +1,7 @@
+import { createBackgroundLayer, createSpriteLayer } from "./layers.js";
+import { loadBackgroundSprites } from "./sprites.js";
+import Level from "./level.js";
+
 export function loadImage(url) {
   return new Promise((resolve) => {
     const image = new Image();
@@ -9,10 +13,24 @@ export function loadImage(url) {
 }
 
 export function loadLevel(name) {
-  return fetch(`/levels/${name}.json`).then((r) => r.json());
+  return Promise.all([
+    loadBackgroundSprites(),
+    fetch(`/levels/${name}.json`).then((r) => r.json()),
+  ]).then(([backgroundSprite, levelSpec]) => {
+    const level = new Level();
+    const backgroundLayer = createBackgroundLayer(
+      levelSpec.backgrounds,
+      backgroundSprite
+    );
+    level.comp.layers.push(backgroundLayer);
+    const spriteLayer = createSpriteLayer(level.entities);
+    level.comp.layers.push(spriteLayer);
+
+    return level;
+  });
 }
 
-export async function loadCanvas() {
+export async function loadContext() {
   const canvas = await document.createElement("canvas");
   await document.body.appendChild(canvas);
   canvas.width = 640;
