@@ -1,17 +1,18 @@
-import Entity from "./entity.js";
+import Entity, { Trait } from "./entity.js";
 import { loadMarioSprite } from "./sprites.js";
+import Velocity from "./traits/velocity.js";
+import Jump from "./traits/Jump.js";
 
 export function createMario() {
   const mario = new Entity();
 
   return loadMarioSprite().then((marioSprite) => {
+    mario.addTrait(new Velocity());
+    mario.addTrait(new Jump());
     mario.draw = function drawMario(context) {
       marioSprite.draw("idle", context, this.pos.x, this.pos.y);
     };
-    mario.update = function updateMario(deltaTime) {
-      this.pos.x += this.vel.x * deltaTime;
-      this.pos.y += this.vel.y * deltaTime;
-    };
+
     return mario;
   });
 }
