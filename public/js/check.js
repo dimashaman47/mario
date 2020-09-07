@@ -17,7 +17,6 @@ Promise.all([
   loadBackgroundSprites(),
   loadLevel("1-1"),
 ]).then(([marioSprite, backgroundSprites, level]) => {
-  console.log("Level loader", level);
 
   const comp = new Compositor();
   comp.layers.push(createBackgroundLayer(level.backgrounds, backgroundSprites));
